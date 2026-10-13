@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Does That Actually Make Sense? | Neuroinclusive Performance Review Clarity Checker</title>
+<meta name="description" content="A free tool from Brain in Hand that helps managers make performance appraisals clearer, fairer and more neuroinclusive.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* =========================================================
+   COLOURS
+   To match official Brain in Hand brand colours later,
+   change the values in the two blocks below.
+   ========================================================= */
+:root {
+  --bg: #F7F5FB;
+  --surface: #FFFFFF;
+  --surface-2: #F0EAF9;
+  --text: #1F1830;
+  --muted: #4F4760;
+  --primary: #4B2A82;
+  --primary-hover: #371E62;
+  --on-primary: #FFFFFF;
+  --highlight: #FFE27A;
+  --highlight-text: #1F1830;
+  --note: #9B1F6A;
+  --border: #DDD5EA;
+  --border-strong: #6E6582;
+  --focus: #1A4FD6;
+  --warn-bg: #FFF1E4;
+  --warn-border: #B4510F;
+  --warn-text: #5A2905;
+  --demo-bg: #EAF0FF;
+  --demo-border: #3D5BC4;
+  --demo-text: #1F2F6B;
+  --radius: 12px;
+  color-scheme: light;
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #14111C; --surface: #1D1828; --surface-2: #2A2040; --text: #EEEAF5; --muted: #BDB4CC;
+    --primary: #C7AEF5; --primary-hover: #DCCBFA; --on-primary: #24113F;
+    --highlight: #6E5A12; --highlight-text: #FFFFFF; --note: #F5A3D0;
+    --border: #352C47; --border-strong: #8F86A3; --focus: #9DBDFF;
+    --warn-bg: #3A2112; --warn-border: #F0965A; --warn-text: #FFDCC4;
+    --demo-bg: #1A2342; --demo-border: #8EA6F5; --demo-text: #DCE4FF;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #14111C; --surface: #1D1828; --surface-2: #2A2040; --text: #EEEAF5; --muted: #BDB4CC;
+  --primary: #C7AEF5; --primary-hover: #DCCBFA; --on-primary: #24113F;
+  --highlight: #6E5A12; --highlight-text: #FFFFFF; --note: #F5A3D0;
+  --border: #352C47; --border-strong: #8F86A3; --focus: #9DBDFF;
+  --warn-bg: #3A2112; --warn-border: #F0965A; --warn-text: #FFDCC4;
+  --demo-bg: #1A2342; --demo-border: #8EA6F5; --demo-text: #DCE4FF;
+  color-scheme: dark;
+}
+html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+*, *::before, *::after { box-sizing: inherit; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+  font-size: 1.0625rem;
+  line-height: 1.6;
+  -webkit-text-size-adjust: 100%;
+}
+img, svg { max-width: 100%; }
+a { color: var(--primary); text-underline-offset: 0.18em; }
+a:hover { color: var(--primary-hover); }
+:focus-visible { outline: 3px solid var(--focus); outline-offset: 3px; border-radius: 4px; }
+.visually-hidden {
+  position: absolute !important; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.skip-link {
+  position: absolute; left: 1rem; top: -4rem; z-index: 10;
+  background: var(--primary); color: var(--on-primary); padding: 0.75rem 1rem;
+  border-radius: 8px; font-weight: 700; text-decoration: none;
+}
+.skip-link:focus { top: calc(env(safe-area-inset-top, 0px) + 0.75rem); color: var(--on-primary); }
+
+.wrap { max-width: 48rem; margin: 0 auto; padding: 0 1.25rem; }
+
+/* Header */
+.site-header { border-bottom: 1px solid var(--border); background: var(--surface); }
+.site-header .wrap { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 3.5rem; flex-wrap: wrap; }
+.brand { font-weight: 700; color: var(--primary); text-decoration: none; font-size: 1.05rem; }
+.free-tag { font-size: 0.9rem; color: var(--muted); }
+
+/* Demo banner */
+.demo-banner {
+  background: var(--demo-bg); color: var(--demo-text);
+  border-bottom: 2px solid var(--demo-border);
+  font-size: 0.95rem;
+}
+.demo-banner .wrap { padding-top: 0.6rem; padding-bottom: 0.6rem; }
+.demo-banner strong { font-weight: 700; }
+
+/* Hero */
+.hero { padding: 2.5rem 0 1.5rem; }
+.hero h1 {
+  font-size: clamp(2.1rem, 6.5vw, 3.4rem);
+  line-height: 1.08; letter-spacing: -0.01em; margin: 0 0 0.6rem; font-weight: 700;
+}
+.hero .subtitle { font-size: clamp(1.1rem, 2.6vw, 1.3rem); color: var(--muted); margin: 0 0 1.5rem; max-width: 36rem; }
+.annotated {
+  position: relative; background: var(--surface); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 1.25rem 1.25rem 1.1rem; max-width: 34rem;
+  margin: 0 0 1.5rem;
+}
+.annotated .sample { font-size: 1.25rem; margin: 0; }
+.annotated .margin-note {
+  display: block; margin-top: 0.6rem; color: var(--note); font-style: italic; font-size: 1rem;
+  padding-left: 0.9rem; border-left: 3px solid var(--note);
+}
+.hero .intro { max-width: 38rem; margin: 0; }
+
+mark, .hl {
+  background: var(--highlight); color: var(--highlight-text);
+  padding: 0.05em 0.15em; border-radius: 3px;
+  -webkit-box-decoration-break: clone; box-decoration-break: clone;
+}
+
+/* Privacy box */
+.privacy {
+  background: var(--warn-bg); color: var(--warn-text);
+  border: 1px solid var(--warn-border); border-left-width: 6px;
+  border-radius: var(--radius); padding: 1rem 1.25rem; margin: 0 0 2rem;
+}
+.privacy h2 { font-size: 1.15rem; margin: 0 0 0.4rem; }
+.privacy ul { margin: 0.25rem 0 0; padding-left: 1.2rem; }
+.privacy li { margin: 0.2rem 0; }
+
+/* Form */
+.checker { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.5rem 1.25rem; margin-bottom: 2rem; }
+.step-label, legend {
+  font-size: 1.2rem; font-weight: 700; margin: 0 0 0.75rem; padding: 0;
+  display: flex; align-items: center; gap: 0.6rem;
+}
+.step-num {
+  flex: none; display: inline-grid; place-items: center; width: 1.9rem; height: 1.9rem;
+  border-radius: 50%; background: var(--primary); color: var(--on-primary); font-size: 1rem;
+}
+fieldset { border: 0; margin: 0 0 1.75rem; padding: 0; min-width: 0; }
+.choices { display: grid; grid-template-columns: 1fr; gap: 0.6rem; }
+@media (min-width: 36rem) { .choices { grid-template-columns: 1fr 1fr; } }
+.choice {
+  display: flex; gap: 0.75rem; align-items: flex-start; cursor: pointer;
+  border: 2px solid var(--border-strong); border-radius: 10px; padding: 0.8rem 0.9rem;
+  background: var(--surface); min-height: 44px;
+}
+.choice input { width: 1.3rem; height: 1.3rem; margin: 0.15rem 0 0; flex: none; accent-color: var(--primary); }
+.choice:has(input:checked) { border-color: var(--primary); background: var(--surface-2); box-shadow: inset 0 0 0 1px var(--primary); }
+.choice:has(input:focus-visible) { outline: 3px solid var(--focus); outline-offset: 2px; }
+.choice input:focus-visible { outline: none; }
+.choice-title { display: block; font-weight: 700; }
+.choice-desc { display: block; font-size: 0.93rem; color: var(--muted); }
+
+.field { margin-bottom: 1.25rem; }
+.hint { color: var(--muted); font-size: 0.95rem; margin: -0.4rem 0 0.6rem; }
+textarea {
+  width: 100%; min-height: 9rem; resize: vertical; font: inherit; color: var(--text);
+  background: var(--surface); border: 2px solid var(--border-strong); border-radius: 10px;
+  padding: 0.8rem 0.9rem; line-height: 1.5;
+}
+textarea:focus-visible { outline: 3px solid var(--focus); outline-offset: 2px; border-color: var(--primary); }
+textarea[aria-invalid="true"] { border-color: var(--warn-border); }
+.counter { font-size: 0.9rem; color: var(--muted); text-align: right; margin-top: 0.25rem; }
+.error { color: var(--warn-text); background: var(--warn-bg); border-left: 4px solid var(--warn-border); padding: 0.5rem 0.75rem; border-radius: 6px; margin: 0.5rem 0 0; font-weight: 700; }
+
+.examples { margin: 0 0 1.5rem; }
+.examples h3 { font-size: 1.05rem; margin: 0 0 0.25rem; }
+.examples p { margin: 0 0 0.6rem; color: var(--muted); font-size: 0.95rem; }
+.example-list { display: flex; flex-wrap: wrap; gap: 0.5rem; list-style: none; margin: 0; padding: 0; }
+.example {
+  font: inherit; font-size: 0.95rem; text-align: left; cursor: pointer;
+  background: var(--surface-2); color: var(--text); border: 1px solid var(--border-strong);
+  border-radius: 999px; padding: 0.5rem 0.95rem; min-height: 44px; line-height: 1.3;
+}
+.example:hover { border-color: var(--primary); }
+
+.btn-row { display: flex; flex-wrap: wrap; gap: 0.75rem; align-items: center; }
+.btn {
+  font: inherit; font-weight: 700; cursor: pointer; border-radius: 10px; min-height: 48px;
+  padding: 0.7rem 1.4rem; border: 2px solid var(--primary);
+}
+.btn-primary { background: var(--primary); color: var(--on-primary); font-size: 1.1rem; }
+.btn-primary:hover { background: var(--primary-hover); border-color: var(--primary-hover); }
+.btn-secondary { background: transparent; color: var(--primary); }
+.btn-secondary:hover { background: var(--surface-2); }
+
+/* Results */
+.results { margin-bottom: 2.5rem; }
+.results[hidden] { display: none; }
+.results > h2 { font-size: 1.6rem; margin: 0 0 0.4rem; }
+.results .summary { margin: 0 0 1.25rem; }
+.your-words {
+  background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 1rem 1.25rem; margin-bottom: 1rem;
+}
+.your-words h3 { font-size: 1rem; margin: 0 0 0.4rem; color: var(--muted); }
+.your-words .quoted { font-size: 1.15rem; margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
+.your-words .small { font-size: 0.9rem; color: var(--muted); margin: 0.6rem 0 0; }
+
+.result-block {
+  background: var(--surface); border: 1px solid var(--border); border-left: 5px solid var(--primary);
+  border-radius: var(--radius); padding: 1rem 1.25rem; margin-bottom: 1rem;
+}
+.result-block h3 { font-size: 1.2rem; margin: 0 0 0.5rem; }
+.result-block ul { margin: 0; padding-left: 1.2rem; }
+.result-block li { margin: 0.45rem 0; }
+.result-block li .phrase { font-weight: 700; }
+.result-block.questions { border-left-color: var(--note); }
+.result-block.questions ol { margin: 0; padding-left: 1.4rem; }
+.result-block.questions li { margin: 0.5rem 0; font-size: 1.08rem; }
+
+.honesty {
+  background: var(--surface-2); border-radius: 10px; padding: 0.85rem 1rem; margin: 0.25rem 0 1rem;
+  font-size: 0.98rem;
+}
+.template {
+  background: var(--bg); border: 2px dashed var(--border-strong); border-radius: 10px;
+  padding: 0.9rem 1rem; margin: 0.5rem 0 0; white-space: pre-wrap; overflow-wrap: anywhere;
+}
+.template .gap { font-weight: 700; color: var(--primary); }
+
+.privacy-flag {
+  background: var(--warn-bg); color: var(--warn-text); border: 1px solid var(--warn-border);
+  border-left-width: 6px; border-radius: var(--radius); padding: 0.9rem 1.1rem; margin-bottom: 1rem;
+}
+.privacy-flag p { margin: 0; }
+
+.results-actions { display: flex; flex-wrap: wrap; gap: 0.75rem; margin-top: 1.25rem; }
+
+/* Future toolkit offer (switched off for now) */
+.toolkit { background: var(--surface-2); border-radius: var(--radius); padding: 1.25rem; margin-bottom: 2rem; }
+.toolkit[hidden] { display: none; }
+
+/* Footer */
+.site-footer { border-top: 1px solid var(--border); padding: 1.5rem 0 2.5rem; color: var(--muted); font-size: 0.95rem; }
+.site-footer p { margin: 0 0 0.6rem; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+@media (min-width: 40rem) {
+  .checker { padding: 2rem; }
+}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#checker">Skip to the clarity checker</a>
+
+<header class="site-header">
+  <div class="wrap">
+    <span class="brand">Brain in Hand</span>
+    <span class="free-tag">Free tool for managers</span>
+  </div>
+</header>
+
+<div class="demo-banner" role="note">
+  <div class="wrap">
+    <strong>Demonstration version.</strong> Feedback comes from built-in examples and rules, not live AI. It's a preview of how the finished tool will work.
+  </div>
+</div>
+
+<main id="main">
+  <div class="wrap">
+    <section class="hero" aria-labelledby="page-title">
+      <h1 id="page-title">Does that actually make sense?</h1>
+      <p class="subtitle">The neuroinclusive performance review clarity checker</p>
+
+      <figure class="annotated" aria-label="An example of vague appraisal wording with a note in the margin">
+        <p class="sample"><span class="hl">Consistently exceeds expectations.</span></p>
+        <span class="margin-note">Which expectations? Were they ever explained? How would anyone know they'd been met?</span>
+      </figure>
+
+      <p class="intro">Performance reviews are full of phrases that feel clear to the person who wrote them but can mean very different things to the person reading them. This is especially true for many neurodivergent employees. Paste in your wording and we'll show you what might need explaining, so your next review conversation is fairer, clearer and more two-way.</p>
+    </section>
+
+    <aside class="privacy" aria-labelledby="privacy-title">
+      <h2 id="privacy-title">Before you start: keep it anonymous</h2>
+      <ul>
+        <li>Please don't enter real names, diagnoses, health information or confidential performance details.</li>
+        <li>Use general wording, like the text from your appraisal template, rather than notes about a specific person.</li>
+        <li>What you type isn't saved or sent anywhere. It's checked on your own device and disappears when you close the page.</li>
+      </ul>
+    </aside>
+
+    <section class="checker" id="checker" aria-labelledby="checker-title" tabindex="-1">
+      <h2 id="checker-title" class="visually-hidden">Check your wording</h2>
+      <form id="clarity-form" novalidate>
+        <fieldset>
+          <legend><span class="step-num" aria-hidden="true">1</span>What are you checking?</legend>
+          <div class="choices">
+            <label class="choice">
+              <input type="radio" name="type" value="question" checked>
+              <span><span class="choice-title">An appraisal question</span><span class="choice-desc">e.g. "Describe a recent achievement"</span></span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="type" value="rating">
+              <span><span class="choice-title">A rating definition</span><span class="choice-desc">e.g. "4 – Exceeds expectations"</span></span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="type" value="expectation">
+              <span><span class="choice-title">A performance expectation</span><span class="choice-desc">e.g. "Communicates effectively"</span></span>
+            </label>
+            <label class="choice">
+              <input type="radio" name="type" value="feedback">
+              <span><span class="choice-title">Feedback</span><span class="choice-desc">e.g. "Needs to be more proactive"</span></span>
+            </label>
+          </div>
+        </fieldset>
+
+        <div class="field">
+          <label class="step-label" for="wording"><span class="step-num" aria-hidden="true">2</span>Type or paste your wording</label>
+          <p class="hint" id="wording-hint">Up to 1,000 characters. Remember: no names or personal details.</p>
+          <textarea id="wording" name="wording" maxlength="1000" aria-describedby="wording-hint wording-count" spellcheck="true"></textarea>
+          <p class="counter" id="wording-count" aria-live="polite">0 of 1,000 characters</p>
+          <p class="error" id="wording-error" hidden></p>
+        </div>
+
+        <div class="examples">
+          <h3 id="examples-title">Or try an example</h3>
+          <p>Choosing one fills in the box and checks it straight away.</p>
+          <ul class="example-list" aria-labelledby="examples-title">
+            <li><button type="button" class="example" data-type="rating" data-text="Consistently exceeds expectations.">"Consistently exceeds expectations"</button></li>
+            <li><button type="button" class="example" data-type="expectation" data-text="Demonstrates a proactive, can-do attitude and takes ownership of their work.">"Proactive, can-do attitude"</button></li>
+            <li><button type="button" class="example" data-type="feedback" data-text="Needs to communicate better with the team and be more visible in meetings.">"Communicate better, be more visible"</button></li>
+            <li><button type="button" class="example" data-type="question" data-text="Describe a time when you went above and beyond in your role.">"A time you went above and beyond"</button></li>
+            <li><button type="button" class="example" data-type="rating" data-text="3 – Meets expectations: Performs well and delivers work of a good standard in a timely manner.">"3 – Meets expectations"</button></li>
+            <li><button type="button" class="example" data-type="expectation" data-text="Manages their own workload effectively and adapts to change as needed.">"Manages workload, adapts to change"</button></li>
+          </ul>
+        </div>
+
+        <div class="btn-row">
+          <button type="submit" class="btn btn-primary">Check for clarity</button>
+          <button type="button" class="btn btn-secondary" id="clear-btn">Clear</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="results" id="results" aria-labelledby="results-title" hidden></section>
+
+    <!-- FUTURE: Neuroinclusive Appraisal Toolkit offer.
+         Switched off for now (see CONFIG.toolkitOffer in the script below).
+         The HubSpot form will go inside this section later. -->
+    <section class="toolkit" id="toolkit-offer" aria-labelledby="toolkit-title" hidden>
+      <h2 id="toolkit-title">Get the Neuroinclusive Appraisal Toolkit</h2>
+      <p>Coming soon.</p>
+    </section>
+
+    <p id="status" class="visually-hidden" role="status" aria-live="polite"></p>
+  </div>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p>Made by Brain in Hand. Inspired by what we learned introducing our own performance framework, WGLL.</p>
+    <p>This tool offers prompts for reflection. It isn't legal or HR advice, and it can't judge whether any decision about an employee is fair.</p>
+    <p>Your wording isn't stored. This demonstration runs entirely in your browser.</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  "use strict";
+
+  /* ======================================================
+     SETTINGS
+     mode: "demo" uses built-in rules. Later this can be
+     switched to a secure AI service (the secret key will
+     live on a server, never in this file).
+     toolkitOffer: switch on later for the HubSpot toolkit.
+     ====================================================== */
+  var CONFIG = {
+    mode: "demo",
+    maxLength: 1000,
+    toolkitOffer: { enabled: false }
+  };
+
+  /* ---------- Things the checker looks for ---------- */
+  var RULES = [
+    {
+      id: "expectations",
+      re: "\\b(exceed\\w*|meets?|meeting|met|below|above|beyond|surpass\\w*|not meeting)\\s+(all |some |most |the |my |our |their |your )*expectations?\\b",
+      unclear: "It mentions expectations, but doesn't say what those expectations actually are.",
+      assumption: "That the expectations were clearly explained to the employee beforehand, and that you both picture the same thing.",
+      missing: "What the expectations are, what meeting them looks like in practice, and (if relevant) what going past them looks like.",
+      tip: "Write down the actual expectations first. Then describe what meeting them looks like, using real examples with personal details removed.",
+      question: "What do you understand the expectations for your role to be? Is any part of them unclear?"
+    },
+    {
+      id: "frequency",
+      re: "\\b(consistently|always|never|regularly|often|frequently|sometimes|occasionally|rarely|usually|routinely)\\b",
+      unclear: "Words like \"consistently\" or \"regularly\" mean different things to different people.",
+      assumption: "That the employee will guess how often counts as often enough.",
+      missing: "How often, in a way you could count or check, such as \"every week\" or \"in most projects this year\".",
+      tip: "Swap the frequency word for something countable, or explain what it means in this role.",
+      question: "How often do you think this needs to happen? What would make it easier to keep track of?"
+    },
+    {
+      id: "proactive",
+      re: "\\b(proactiv\\w*|initiative|self[- ]starter|self[- ]motivated|can[- ]do)\\b",
+      unclear: "\"Proactive\" or \"initiative\" doesn't say which things to do without being asked, or when to check first.",
+      assumption: "That the employee knows where the line is between helpful initiative and overstepping.",
+      missing: "Examples of situations where you'd like them to act on their own, and situations where they should check in first.",
+      tip: "List two or three specific situations where you'd like action without being asked, and say what that action is.",
+      question: "Have there been times you spotted something that needed doing but weren't sure if it was your place to do it?"
+    },
+    {
+      id: "communication",
+      re: "\\b(communicat\\w*|in the loop|keep(s|ing)? (people|others|me|us|the team) (informed|updated))\\b",
+      unclear: "\"Communication\" covers lots of things: emails, meetings, updates, tone, how quickly someone replies. It's hard to know which one you mean.",
+      assumption: "That good communication looks the same for everyone, and that preferred methods have already been agreed.",
+      missing: "Which kind of communication, with whom, how often and in what format (written, spoken or chat).",
+      tip: "Name the exact communication you need. For example: \"Send the team a short written update every Friday saying what's done and what's stuck.\"",
+      question: "Which ways of communicating work best for you? Are there any that are harder?"
+    },
+    {
+      id: "teamwork",
+      re: "\\b(team ?player|teamwork|collaborat\\w*|works? well with others|gets? on with (people|others|colleagues))\\b",
+      unclear: "It isn't clear which team behaviours you're looking for.",
+      assumption: "That being a \"team player\" means the same to everyone. It often quietly means being sociable or outgoing.",
+      missing: "The specific things that help the team, such as sharing information, meeting handover deadlines or offering help in a particular way.",
+      tip: "Describe what useful teamwork looks like in this team, focusing on actions rather than personality.",
+      question: "What helps you work well with the rest of the team? Is there anything that gets in the way?"
+    },
+    {
+      id: "attitude",
+      re: "\\b(attitude|positiv\\w*|enthusias\\w*|passion\\w*|energetic|energy|motivated|cheerful|approachable|personality)\\b",
+      unclear: "This describes how someone comes across, rather than what they do.",
+      assumption: "That an inner feeling can be judged from the outside. Many people, including many neurodivergent people, show interest and commitment in different ways.",
+      missing: "The actual behaviour or result you need, separate from how the person seems.",
+      tip: "Ask yourself: what would I see or hear that tells me this is happening? Write that down instead.",
+      question: "How do you like to show that you're engaged with your work? Is there anything you'd like me to know about that?"
+    },
+    {
+      id: "unwritten",
+      re: "\\b(professional\\w*|appropriate(ly)?|inappropriate(ly)?|suitabl[ey]|acceptable|unacceptable)\\b",
+      unclear: "Words like \"professional\" or \"appropriate\" rely on unwritten rules.",
+      assumption: "That everyone already knows the unwritten rules of this workplace.",
+      missing: "What the standard actually is, written down, with examples.",
+      tip: "Spell out the specific behaviour you mean, such as tone in emails or how quickly to reply, rather than relying on a general word.",
+      question: "Are there any workplace \"rules\" you've found confusing, or that nobody has explained?"
+    },
+    {
+      id: "beyond",
+      re: "\\b(above and beyond|extra mile|go(es|ing)? the extra|over and above|step(s|ping)? up)\\b",
+      unclear: "\"Above and beyond\" doesn't say what the normal level is, so nobody can know what going beyond it means.",
+      assumption: "That extra effort, possibly unpaid or outside normal hours, is expected but not said out loud.",
+      missing: "What the role actually requires, and whether doing more is optional or expected.",
+      tip: "Be clear about what's required. If you value extra contributions, say what kind, and make clear they're optional.",
+      question: "Do you feel clear about where your role starts and stops?"
+    },
+    {
+      id: "ownership",
+      re: "\\b(ownership|accountab\\w*|takes? responsibility|taking responsibility)\\b",
+      unclear: "\"Ownership\" can mean finishing tasks, making decisions, fixing problems or owning up to mistakes.",
+      assumption: "That the employee knows which decisions are theirs to make.",
+      missing: "Which tasks or decisions they're responsible for, what \"done\" looks like and when to flag a problem.",
+      tip: "List what they own, what finished looks like, and when you'd like to hear about problems.",
+      question: "Which decisions do you feel are yours to make? Are there any you're unsure about?"
+    },
+    {
+      id: "time",
+      re: "\\b(timely|in a timely (manner|fashion|way)|promptly|quickly|asap|as soon as possible|in good time|swiftly)\\b",
+      unclear: "\"Timely\" or \"quickly\" doesn't say how quickly.",
+      assumption: "That everyone works to the same sense of urgency.",
+      missing: "An actual timeframe, such as \"within two working days\", and what to do if it can't be met.",
+      tip: "Give a timeframe, and say what to do if a deadline is at risk.",
+      question: "When deadlines are tight, what helps you plan and prioritise?"
+    },
+    {
+      id: "quality",
+      re: "\\b(good|great|excellent|strong|effective(ly)?|high[- ]quality|high standards?|outstanding|exceptional|satisfactory|adequate|poor|weak|solid)\\b",
+      unclear: "Words like \"good\", \"strong\" or \"effective\" are judgements, not descriptions.",
+      assumption: "That you and the employee would agree on what \"good\" looks like.",
+      missing: "What good looks like in practice: a real example, a standard or a short checklist.",
+      tip: "Show what good looks like with a real, anonymised example or a short checklist.",
+      question: "What do you think good looks like for this part of your work? Shall we agree an example together?"
+    },
+    {
+      id: "conditions",
+      re: "\\b(as needed|when necessary|where (required|necessary|appropriate)|as required|if needed|as and when|relevant|reasonable|various|etc\\.?|and so on|other duties)",
+      unclear: "Phrases like \"as needed\" or \"other duties\" leave the employee to guess when, and what.",
+      assumption: "That the employee will recognise the right moment without being told.",
+      missing: "The situations that should trigger the action, or the full list of what's included.",
+      tip: "Name the situations: \"When X happens, please do Y.\"",
+      question: "Are there parts of your role where you're not sure when you're expected to step in?"
+    },
+    {
+      id: "visibility",
+      re: "\\b(visib\\w*|speaks? up|speaking up|eye contact|presence|gravitas|confiden\\w*|assertive\\w*|outgoing|vocal)\\b",
+      unclear: "This focuses on how someone appears in social situations rather than the work they deliver.",
+      assumption: "That speaking up or seeming confident is the only way to show contribution. This can unfairly penalise neurodivergent people, quieter people and anyone who processes information differently.",
+      missing: "Why it matters for the role, and other ways the same goal could be met, such as written input before or after meetings.",
+      tip: "Separate the outcome you need (for example, \"your ideas are heard\") from the method, and offer more than one way to get there.",
+      question: "What's the best way for you to share ideas: in the meeting, in writing beforehand, or afterwards?"
+    },
+    {
+      id: "improve",
+      re: "\\b(improve\\w*|better|work on|be more|be less|needs? more|needs? to be more)\\b",
+      unclear: "It says something should change, but not what the end point is.",
+      assumption: "That the employee knows what \"better\" looks like and how to get there.",
+      missing: "What the improved version looks like, by when, and what support will help.",
+      tip: "Describe the end point and agree a small first step together.",
+      question: "What do you think would help most with this? What support would you like from me?"
+    },
+    {
+      id: "workload",
+      re: "\\b(time management|manag\\w* (their |your |his |her |own |the )*(own )?(time|workload|priorities)|organi[sz]\\w*|prioriti[sz]\\w*|multi-?task\\w*|juggl\\w*|under pressure|handles? pressure|resilien\\w*|adapt\\w*|flexib\\w*|copes?|coping)\\b",
+      unclear: "This names a skill but not what's going wrong or what success would look like.",
+      assumption: "That the same ways of organising and handling change work for everyone. Many neurodivergent people organise differently and may benefit from tools or adjustments.",
+      missing: "The specific situation (such as last-minute changes or competing deadlines) and what a good outcome looks like.",
+      tip: "Describe the situation and the outcome you need, then ask what tools or adjustments would help.",
+      question: "When priorities change or pile up, what helps you most? Are there tools or adjustments that would make it easier?"
+    },
+    {
+      id: "fit",
+      re: "\\b(culture fit|cultural fit|fits? in|fitting in|one of us|the way we do things)\\b",
+      unclear: "\"Fitting in\" isn't something an employee can act on.",
+      assumption: "That there's one right way to be at work. This can exclude people who think or behave differently.",
+      missing: "The specific behaviours you value, written as actions.",
+      tip: "Replace \"fit\" with the behaviours that actually matter, such as \"shares credit with colleagues\".",
+      question: "Is there anything about how we work as a team that you'd like to be different?"
+    },
+    {
+      id: "understanding",
+      re: "\\b(understand(s|ing)?|awareness|aware of|knowledge of|grasp)\\b",
+      unclear: "Understanding happens inside someone's head, so it's hard to check from the outside.",
+      assumption: "That good understanding will show up in a way you'll notice.",
+      missing: "How someone would show that understanding: what they'd do or produce.",
+      tip: "Describe what someone who understands this would actually do.",
+      question: "Is there anything you'd like explained differently, or in a different format?"
+    },
+    {
+      id: "idiom",
+      re: "\\b(hit the ground running|on the same page|low[- ]hanging fruit|move the needle|touch base|bandwidth|raise the bar|ball in (your|their|my) court|outside the box|pull (your|their|his|her) socks up|step up to the plate|ducks in a row|run with it|read the room|a[- ]game|circle back|deep dive|on (your|their|my) radar|hit the mark)\\b",
+      unclear: "Figures of speech like this can be taken literally or misunderstood.",
+      assumption: "That everyone shares the same meaning for this phrase.",
+      missing: "A plain, literal description of what you mean.",
+      tip: "Replace the phrase with exactly what you mean, in plain words.",
+      question: "Has anything in past feedback been confusing or hard to act on?"
+    }
+  ];
+
+  /* ---------- What each type of wording usually needs ---------- */
+  var TYPES = {
+    question: {
+      name: "appraisal question",
+      assumption: "That the employee knows what a good answer looks like and can think of examples on the spot.",
+      missing: [
+        "What kind of answer you're hoping for, and roughly how long it should be.",
+        "Whether they can see the question in advance and prepare in writing."
+      ],
+      template: "Tell us about [a specific topic] from [a time period, e.g. the last six months].\nYou could include [the kind of detail you'd find useful].\nAround [a length or format, e.g. two or three short examples] is plenty.\nYou'll get this question [how far ahead] so you can prepare, in writing if that helps.",
+      question: "Would it help to see these questions in writing before we meet?"
+    },
+    rating: {
+      name: "rating definition",
+      assumption: "That everyone giving and receiving this rating reads it the same way.",
+      missing: [
+        "What separates this level from the levels above and below it.",
+        "One or two real examples of work at this level (with personal details removed)."
+      ],
+      template: "[Rating name]: You [specific things that were done] [how often or how many].\nThe difference between this and the next level up is [a specific, checkable difference].\nAn example of work at this level is [a real, anonymised example].",
+      question: "Where do you think you are on this, and why? Let's compare examples together."
+    },
+    expectation: {
+      name: "performance expectation",
+      assumption: "That this expectation has already been explained to, and agreed with, the employee.",
+      missing: [
+        "How you'll both know it's being met.",
+        "What support, tools or adjustments are available."
+      ],
+      template: "In this role, you'll [a specific action someone could see or hear] [how often or by when].\nGood looks like [a real, anonymised example].\nWe'll both know it's happening when [how it will be checked].\nTo help, we'll provide [support, tools or adjustments].\nIf anything is unclear, [who to ask, and how].",
+      question: "What would help you feel confident that you're meeting this?"
+    },
+    feedback: {
+      name: "piece of feedback",
+      assumption: "That the employee will know exactly which moment or piece of work you mean.",
+      missing: [
+        "The specific situation this is based on.",
+        "What you'd like to happen next, and what support you'll offer."
+      ],
+      template: "On [the date or occasion], I noticed [what happened, described factually].\nThe effect was [the impact on the work or on other people].\nGoing forward, I'd like [a specific action or outcome].\nWhat would help you do that? I can offer [support or adjustments].",
+      question: "How did that situation look from your side?"
+    }
+  };
+
+  var CLOSING_QUESTION = "Is there anything that would make our conversations about performance easier for you?";
+
+  var PRIVACY_RES = [
+    /\b(autis\w*|asperger\w*|adhd|dyslexi\w*|dyspraxi\w*|dyscalculi\w*|tourette\w*|ocd|bipolar|depress\w*|anxiety|diagnos\w*|medication|mental health|disabilit\w*|disabled|sickness absence|sick leave|illness|pregnan\w*)\b/i,
+    /\S+@\S+\.\S+/,
+    /\+?\d[\d\s]{9,}\d/,
+    /\b(Mr|Mrs|Ms|Miss|Mx|Dr)\.?\s+[A-Z][a-z]+/
+  ];
+
+  /* ---------- Helpers ---------- */
+  function esc(s) {
+    return String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+  function uniq(arr) {
+    var seen = {}, out = [];
+    arr.forEach(function (x) { if (x && !seen[x]) { seen[x] = true; out.push(x); } });
+    return out;
+  }
+  function getType() {
+    var el = document.querySelector('input[name="type"]:checked');
+    return el ? el.value : "question";
+  }
+
+  /* ---------- The demo checker ---------- */
+  function analyseDemo(type, text) {
+    var t = TYPES[type];
+    var found = [];   // {rule, phrases}
+    var ranges = [];
+
+    RULES.forEach(function (rule) {
+      var re = new RegExp(rule.re, "gi");
+      var phrases = [];
+      var m;
+      while ((m = re.exec(text)) !== null) {
+        if (m[0].length === 0) { re.lastIndex++; continue; }
+        phrases.push(m[0]);
+        ranges.push([m.index, m.index + m[0].length]);
+      }
+      if (phrases.length) found.push({ rule: rule, phrases: uniq(phrases.map(function (p) { return p.toLowerCase(); })) });
+    });
+
+    var words = text.trim().split(/\s+/).filter(Boolean);
+    var sentences = text.split(/[.!?]+\s|\n+/).filter(function (s) { return s.trim().length; });
+    var hasNumber = /\d/.test(text.replace(/^\s*\d\s*[–—\-:.)]/, ""));
+    var hasTime = /\b(by|within|each|every|per|daily|weekly|monthly|quarterly|annually|days?|weeks?|months?|quarters?|years?|hours?|minutes?|deadline)\b/i.test(text);
+    var hasExample = /\b(for example|e\.g\.|such as|for instance|like when)\b/i.test(text);
+    var hasSupport = /\b(support|help|training|adjustments?|guidance|check-?ins?|mentor\w*|tools?)\b/i.test(text);
+
+    var unclear = [], assumptions = [], missing = [], tips = [], questions = [];
+
+    found.forEach(function (f) {
+      unclear.push({ phrases: f.phrases, text: f.rule.unclear });
+      assumptions.push(f.rule.assumption);
+      missing.push(f.rule.missing);
+      tips.push(f.rule.tip);
+      questions.push(f.rule.question);
+    });
+
+    if (words.length < 6) {
+      unclear.push({ phrases: [], text: "This is very short, so most of the meaning lives in the reader's head rather than on the page." });
+    }
+    if (sentences.some(function (s) { return s.trim().split(/\s+/).length > 25; })) {
+      unclear.push({ phrases: [], text: "At least one sentence is over 25 words long, which can be harder to process. Try one idea per sentence." });
+      tips.push("Break long sentences up so each one contains a single idea.");
+    }
+
+    assumptions.push(t.assumption);
+    missing = missing.concat(t.missing);
+    if (!hasExample) missing.push("A real example of what you mean (with personal details removed).");
+    if ((type === "expectation" || type === "feedback") && !hasTime && !hasNumber) missing.push("A timeframe, or how often this should happen.");
+    if (type === "expectation" && !hasSupport) { /* covered by type list */ }
+
+    questions = uniq(questions).slice(0, 2);
+    questions.push(t.question);
+    if (questions.length < 3) questions.push(CLOSING_QUESTION);
+    questions = uniq(questions).slice(0, 3);
+
+    var privacyFlag = PRIVACY_RES.some(function (re) { return re.test(text); });
+
+    return {
+      type: type,
+      text: text,
+      ranges: ranges,
+      flagCount: found.length,
+      unclear: unclear.slice(0, 6),
+      assumptions: uniq(assumptions).slice(0, 5),
+      missing: uniq(missing).slice(0, 6),
+      tips: uniq(tips).slice(0, 5),
+      template: t.template,
+      questions: questions,
+      privacyFlag: privacyFlag
+    };
+  }
+
+  /* One place to get feedback. Later, when mode isn't "demo",
+     this will ask a secure server (which holds the AI key). */
+  function getFeedback(type, text) {
+    if (CONFIG.mode === "demo") return Promise.resolve(analyseDemo(type, text));
+    return Promise.reject(new Error("Live AI mode isn't set up yet."));
+  }
+
+  /* ---------- Show the results ---------- */
+  function highlight(text, ranges) {
+    if (!ranges.length) return esc(text);
+    var sorted = ranges.slice().sort(function (a, b) { return a[0] - b[0]; });
+    var merged = [sorted[0].slice()];
+    for (var i = 1; i < sorted.length; i++) {
+      var last = merged[merged.length - 1];
+      if (sorted[i][0] <= last[1]) last[1] = Math.max(last[1], sorted[i][1]);
+      else merged.push(sorted[i].slice());
+    }
+    var out = "", pos = 0;
+    merged.forEach(function (r) {
+      out += esc(text.slice(pos, r[0])) + "<mark>" + esc(text.slice(r[0], r[1])) + "</mark>";
+      pos = r[1];
+    });
+    return out + esc(text.slice(pos));
+  }
+
+  function templateHtml(tpl) {
+    return esc(tpl).replace(/\[([^\]]+)\]/g, '<span class="gap">[$1]</span>');
+  }
+
+  function summaryText(r) {
+    if (r.flagCount === 0) {
+      return "We didn't spot any of the common vague phrases we look for, which is a good start. But wording can look clear on paper and still mean different things to different people, so it's worth going through the points below.";
+    }
+    var n = r.flagCount;
+    return "We've highlighted " + n + " kind" + (n === 1 ? "" : "s") + " of wording that could be read in more than one way. None of this means the wording is wrong. It means there's probably something worth explaining or agreeing together.";
+  }
+
+  var lastResult = null;
+
+  function render(r) {
+    lastResult = r;
+    var el = document.getElementById("results");
+    var html = "";
+    html += '<h2 id="results-title" tabindex="-1">Your clarity check</h2>';
+    html += '<p class="summary">' + esc(summaryText(r)) + "</p>";
+
+    if (r.privacyFlag) {
+      html += '<div class="privacy-flag" role="note"><p><strong>Quick privacy check:</strong> your wording might include personal details, such as a name, contact details or health information. Nothing has been saved, but please remove them before checking again or sharing these suggestions.</p></div>';
+    }
+
+    html += '<div class="your-words"><h3>Your wording (' + esc(TYPES[r.type].name) + ")</h3>";
+    html += '<p class="quoted">' + highlight(r.text, r.ranges) + "</p>";
+    if (r.ranges.length) html += '<p class="small">Highlighted words are the ones we talk about below.</p>';
+    html += "</div>";
+
+    html += '<section class="result-block" aria-labelledby="h-unclear"><h3 id="h-unclear">What\'s unclear</h3><ul>';
+    if (r.unclear.length) {
+      r.unclear.forEach(function (u) {
+        var p = u.phrases.length ? '<span class="phrase">' + u.phrases.map(function (x) { return "\u201C" + esc(x) + "\u201D"; }).join(", ") + ":</span> " : "";
+        html += "<li>" + p + esc(u.text) + "</li>";
+      });
+    } else {
+      html += "<li>Nothing obviously vague, but check the missing information below. Clarity depends on what's been agreed, not just on the words.</li>";
+    }
+    html += "</ul></section>";
+
+    html += '<section class="result-block" aria-labelledby="h-assume"><h3 id="h-assume">What it assumes</h3><ul>';
+    r.assumptions.forEach(function (a) { html += "<li>" + esc(a) + "</li>"; });
+    html += "</ul></section>";
+
+    html += '<section class="result-block" aria-labelledby="h-missing"><h3 id="h-missing">What\'s missing</h3><ul>';
+    r.missing.forEach(function (m) { html += "<li>" + esc(m) + "</li>"; });
+    html += "</ul></section>";
+
+    html += '<section class="result-block" aria-labelledby="h-clearer"><h3 id="h-clearer">How to make it clearer</h3>';
+    html += '<p class="honesty"><strong>We haven\'t rewritten your wording for you.</strong> A rewrite would have to guess what you expect, and only you (and your employee) know that. Use the ideas and the fill-in-the-gaps structure below, and add your real details.</p>';
+    if (r.tips.length) {
+      html += "<ul>";
+      r.tips.forEach(function (t) { html += "<li>" + esc(t) + "</li>"; });
+      html += "</ul>";
+    }
+    html += '<p style="margin:0.9rem 0 0;font-weight:700">A structure you could fill in:</p>';
+    html += '<div class="template">' + templateHtml(r.template) + "</div>";
+    html += "</section>";
+
+    html += '<section class="result-block questions" aria-labelledby="h-questions"><h3 id="h-questions">Questions you could ask your employee</h3>';
+    html += '<p style="margin:0 0 0.4rem;color:var(--muted)">These are to open a two-way conversation, not to test anyone.</p><ol>';
+    r.questions.forEach(function (q) { html += "<li>" + esc(q) + "</li>"; });
+    html += "</ol></section>";
+
+    html += '<div class="results-actions">';
+    html += '<button type="button" class="btn btn-primary" id="copy-btn">Copy suggestions</button>';
+    html += '<button type="button" class="btn btn-secondary" id="again-btn">Check something else</button>';
+    html += "</div>";
+
+    el.innerHTML = html;
+    el.hidden = false;
+
+    document.getElementById("copy-btn").addEventListener("click", onCopy);
+    document.getElementById("again-btn").addEventListener("click", function () {
+      var ta = document.getElementById("wording");
+      ta.value = ""; updateCount();
+      el.hidden = true; el.innerHTML = "";
+      ta.focus();
+      ta.scrollIntoView({ block: "center" });
+    });
+
+    if (CONFIG.toolkitOffer.enabled) document.getElementById("toolkit-offer").hidden = false;
+
+    var title = document.getElementById("results-title");
+    title.focus();
+    title.scrollIntoView({ block: "start" });
+    announce("Your clarity check is ready.");
+  }
+
+  function plainText(r) {
+    var lines = [];
+    lines.push("DOES THAT ACTUALLY MAKE SENSE? Clarity check");
+    lines.push("");
+    lines.push("Wording checked (" + TYPES[r.type].name + "):");
+    lines.push(r.text);
+    lines.push("");
+    lines.push("What's unclear:");
+    r.unclear.forEach(function (u) { lines.push("- " + (u.phrases.length ? u.phrases.map(function (x) { return "\"" + x + "\""; }).join(", ") + ": " : "") + u.text); });
+    lines.push("");
+    lines.push("What it assumes:");
+    r.assumptions.forEach(function (a) { lines.push("- " + a); });
+    lines.push("");
+    lines.push("What's missing:");
+    r.missing.forEach(function (m) { lines.push("- " + m); });
+    lines.push("");
+    lines.push("How to make it clearer:");
+    r.tips.forEach(function (t) { lines.push("- " + t); });
+    lines.push("");
+    lines.push("A structure you could fill in:");
+    lines.push(r.template);
+    lines.push("");
+    lines.push("Questions you could ask your employee:");
+    r.questions.forEach(function (q, i) { lines.push((i + 1) + ". " + q); });
+    lines.push("");
+    lines.push("From the Brain in Hand clarity checker (demonstration version).");
+    return lines.join("\n");
+  }
+
+  function copyText(t) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      return navigator.clipboard.writeText(t).then(function () { return true; }, function () { return fallbackCopy(t); });
+    }
+    return Promise.resolve(fallbackCopy(t));
+  }
+  function fallbackCopy(t) {
+    var ta = document.createElement("textarea");
+    ta.value = t; ta.setAttribute("readonly", "");
+    ta.style.position = "fixed"; ta.style.top = "0"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  function onCopy(e) {
+    var btn = e.currentTarget;
+    if (!lastResult) return;
+    copyText(plainText(lastResult)).then(function (ok) {
+      btn.textContent = ok ? "Copied" : "Copy didn't work. Please select and copy the text";
+      announce(ok ? "Suggestions copied." : "Copying didn't work. Please select the text and copy it manually.");
+      setTimeout(function () { btn.textContent = "Copy suggestions"; }, 3000);
+    });
+  }
+
+  function announce(msg) {
+    var s = document.getElementById("status");
+    s.textContent = "";
+    setTimeout(function () { s.textContent = msg; }, 50);
+  }
+
+  /* ---------- Form behaviour ---------- */
+  var ta = document.getElementById("wording");
+  var errorEl = document.getElementById("wording-error");
+
+  function updateCount() {
+    document.getElementById("wording-count").textContent = ta.value.length.toLocaleString("en-GB") + " of 1,000 characters";
+  }
+  function showError(msg) {
+    errorEl.textContent = msg; errorEl.hidden = false;
+    ta.setAttribute("aria-invalid", "true");
+    ta.setAttribute("aria-describedby", "wording-hint wording-count wording-error");
+    ta.focus();
+  }
+  function clearError() {
+    errorEl.hidden = true; errorEl.textContent = "";
+    ta.removeAttribute("aria-invalid");
+    ta.setAttribute("aria-describedby", "wording-hint wording-count");
+  }
+
+  ta.addEventListener("input", function () { updateCount(); if (ta.value.trim()) clearError(); });
+
+  function runCheck() {
+    var text = ta.value.trim();
+    if (!text) { showError("Please type or paste some wording, or choose an example."); return; }
+    if (text.length < 3) { showError("Please enter a little more wording so there's something to check."); return; }
+    clearError();
+    getFeedback(getType(), text).then(render, function () {
+      showError("Something went wrong checking your wording. Please try again.");
+    });
+  }
+
+  document.getElementById("clarity-form").addEventListener("submit", function (e) { e.preventDefault(); runCheck(); });
+
+  document.getElementById("clear-btn").addEventListener("click", function () {
+    ta.value = ""; updateCount(); clearError();
+    var r = document.getElementById("results"); r.hidden = true; r.innerHTML = "";
+    ta.focus();
+  });
+
+  Array.prototype.forEach.call(document.querySelectorAll(".example"), function (b) {
+    b.addEventListener("click", function () {
+      var radio = document.querySelector('input[name="type"][value="' + b.getAttribute("data-type") + '"]');
+      if (radio) radio.checked = true;
+      ta.value = b.getAttribute("data-text");
+      updateCount();
+      runCheck();
+    });
+  });
+
+  updateCount();
+})();
+</script>
+</body>
+</html>
